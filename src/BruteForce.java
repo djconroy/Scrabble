@@ -359,7 +359,7 @@ public class BruteForce implements Bot {
                 && (col == 0 || board.getSqContents(row, col - 1) == Board.EMPTY)
                 && (col + 1 == Board.SIZE || board.getSqContents(row, col + 1) == Board.EMPTY)
                 && ((row > 0 && board.getSqContents(row - 1, col) != Board.EMPTY)
-                || (row + 1 < Board.SIZE && board.getSqContents(row + 1, col) != Board.EMPTY));
+                    || (row + 1 < Board.SIZE && board.getSqContents(row + 1, col) != Board.EMPTY));
     }
 
     /**
@@ -430,7 +430,7 @@ public class BruteForce implements Bot {
                 && (row == 0 || board.getSqContents(row - 1, col) == Board.EMPTY)
                 && (row + 1 == Board.SIZE || board.getSqContents(row + 1, col) == Board.EMPTY)
                 && ((col > 0 && board.getSqContents(row, col - 1) != Board.EMPTY)
-                || (col + 1 < Board.SIZE && board.getSqContents(row, col + 1) != Board.EMPTY));
+                    || (col + 1 < Board.SIZE && board.getSqContents(row, col + 1) != Board.EMPTY));
     }
 
     /**
