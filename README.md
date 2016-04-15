@@ -5,6 +5,6 @@ BruteForce generates every possible word placement that can be made on the bot's
 
 To play BruteForce against itself run Scrabble.main() with the following program arguments: BruteForce BruteForce
 
-Note: BruteForce runs slowly when there's a blank tile in the player's frame. In that case the number of anagrams is multiplied by approximately 26 for each blank tile.
+Note: BruteForce runs slowly when there's a blank tile in the player's frame since each blank tile multiplies the number of anagrams by approximately 26.
 
 To see an illustration of the possible word placement positions BruteForce generates for a particular board state run BruteForceTest.main().
