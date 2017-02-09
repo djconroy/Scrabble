@@ -10,11 +10,11 @@ import java.util.Scanner;
  */
 public class Dictionary {
 
-    private String inputFileName = "resources/sowpods.txt";
+    private String inputFileName = "res/sowpods.txt";
     private Node root;
 
     Dictionary () throws FileNotFoundException {
-        String word = "";
+        String word;
         Node currentNode;
         char currentLetter;
 
@@ -36,7 +36,6 @@ public class Dictionary {
             currentNode.setEndOfWord();
         }
         in.close();
-        return;
     }
 
     public boolean areWords (ArrayList<String> words) {
