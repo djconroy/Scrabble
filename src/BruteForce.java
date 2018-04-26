@@ -21,7 +21,9 @@ public class BruteForce implements Bot {
     private List<List<String>> anagrams = new ArrayList<>(Frame.MAX_TILES + 1);
     private List<List<Position>> possiblePositions = new ArrayList<>(Frame.MAX_TILES + 1);
 
-    public BruteForce() { reset(); }
+    public BruteForce() {
+        reset();
+    }
 
     @Override
     public void reset() {
@@ -50,10 +52,14 @@ public class BruteForce implements Bot {
     }
 
     @Override
-    public Word getWord() { return word; }
+    public Word getWord() {
+        return word;
+    }
 
     @Override
-    public String getLetters() { return letters; }
+    public String getLetters() {
+        return letters;
+    }
 
     @Override
     public int getCommand(Player player, Board board, Dictionary dictionary) {
@@ -189,20 +195,26 @@ public class BruteForce implements Bot {
         while (col < Board.SIZE && board.getSqContents(row, col) == Board.EMPTY) {
             col++;
         }
-        if (col == Board.SIZE) return;
+        if (col == Board.SIZE) {
+            return;
+        }
 
         // Found a letter
         numPrecedingOKSqs = countPrecedingOKSqsInRow(board, row, col);
         firstLetterOrOKSq = col - numPrecedingOKSqs;
 
         // Skip letter(s)
-        do col++; while (col < Board.SIZE && board.getSqContents(row, col) != Board.EMPTY);
+        do {
+            col++;
+        } while (col < Board.SIZE && board.getSqContents(row, col) != Board.EMPTY);
 
         numOtherOKSqs = countOtherOKSqsInRow(board, row, col);
         recordPositions(numPrecedingOKSqs, numOtherOKSqs, firstLetterOrOKSq, row, Word.HORIZONTAL, false);
 
         // Search for possible positions which have a different first letter
-        if (col < Board.SIZE) genPossibleInRow(board, row, col);
+        if (col < Board.SIZE) {
+            genPossibleInRow(board, row, col);
+        }
     }
 
     /**
@@ -210,6 +222,7 @@ public class BruteForce implements Bot {
      */
     private int countPrecedingOKSqsInRow(Board board, final int row, int col) {
         int numPrecedingOKSqs = 0;
+        
         while (numPrecedingOKSqs < Frame.MAX_TILES && col > 0
                 && board.getSqContents(row, col - 1) == Board.EMPTY
                 && (col == 1 || board.getSqContents(row, col - 2) == Board.EMPTY)) {
@@ -225,6 +238,7 @@ public class BruteForce implements Bot {
      */
     private int countOtherOKSqsInRow(Board board, final int row, int col) {
         int numOtherOKSqs = 0;
+        
         while (numOtherOKSqs < Frame.MAX_TILES && col < Board.SIZE) {
             if (board.getSqContents(row, col) == Board.EMPTY) {
                 numOtherOKSqs++;
@@ -238,23 +252,27 @@ public class BruteForce implements Bot {
      * Add positions encompassing the OK squares preceding and following a bunch of letters or a hook square.
      */
     private void recordPositions(
-            int numPrecedingOKSqs, int numOtherOKSqs, int firstSq, int rowOrCol, int direction, boolean hook) {
+                int numPrecedingOKSqs,
+                int numOtherOKSqs,
+                int firstSq,
+                int rowOrCol,
+                int direction,
+                boolean hook) {
         for (int numOthers = hook ? 1 : 0; numOthers <= numOtherOKSqs; numOthers++) {
-            for (int numPreceding = 1;
-                 numPreceding <= numPrecedingOKSqs && numPreceding + numOthers <= Frame.MAX_TILES; numPreceding++) {
-                possiblePositions.get(numPreceding + numOthers).add(
-                        new Position(
-                                (direction == Word.HORIZONTAL) ? rowOrCol : firstSq + numPrecedingOKSqs - numPreceding,
-                                (direction == Word.HORIZONTAL) ? firstSq + numPrecedingOKSqs - numPreceding : rowOrCol,
-                                direction));
+            for (int numPreceding = 1; numPreceding <= numPrecedingOKSqs && numPreceding + numOthers <= Frame.MAX_TILES;
+                 numPreceding++) {
+                possiblePositions.get(numPreceding + numOthers).add(new Position(
+                    (direction == Word.HORIZONTAL) ? rowOrCol : firstSq + numPrecedingOKSqs - numPreceding,
+                    (direction == Word.HORIZONTAL) ? firstSq + numPrecedingOKSqs - numPreceding : rowOrCol,
+                    direction));
             }
         }
         // Add positions beginning with a hook square or a letter already on the board
         for (int numOthers = hook ? 2 : 1; numOthers <= numOtherOKSqs; numOthers++) {
-            possiblePositions.get(numOthers).add(
-                    new Position((direction == Word.HORIZONTAL) ? rowOrCol : firstSq + numPrecedingOKSqs,
-                            (direction == Word.HORIZONTAL) ? firstSq + numPrecedingOKSqs : rowOrCol,
-                            direction));
+            possiblePositions.get(numOthers).add(new Position(
+                (direction == Word.HORIZONTAL) ? rowOrCol : firstSq + numPrecedingOKSqs,
+                (direction == Word.HORIZONTAL) ? firstSq + numPrecedingOKSqs : rowOrCol,
+                direction));
         }
     }
 
@@ -275,16 +293,27 @@ public class BruteForce implements Bot {
 
     private void genPossibleInColumn(Board board, int row, final int col) {
         int numPrecedingOKSqs, numOtherOKSqs, firstLetterOrOKSq;
+        
         while (row < Board.SIZE && board.getSqContents(row, col) == Board.EMPTY) {
             row++;
         }
-        if (row == Board.SIZE) return;
+        if (row == Board.SIZE) {
+            return;
+        }
+        
         numPrecedingOKSqs = countPrecedingOKSqsInColumn(board, row, col);
         firstLetterOrOKSq = row - numPrecedingOKSqs;
-        do row++; while (row < Board.SIZE && board.getSqContents(row, col) != Board.EMPTY);
+        
+        do {
+            row++;
+        } while (row < Board.SIZE && board.getSqContents(row, col) != Board.EMPTY);
+        
         numOtherOKSqs = countOtherOKSqsInColumn(board, row, col);
         recordPositions(numPrecedingOKSqs, numOtherOKSqs, firstLetterOrOKSq, col, Word.VERTICAL, false);
-        if (row < Board.SIZE) genPossibleInColumn(board, row, col);
+        
+        if (row < Board.SIZE) {
+            genPossibleInColumn(board, row, col);
+        }
     }
 
     /**
@@ -292,6 +321,7 @@ public class BruteForce implements Bot {
      */
     private int countPrecedingOKSqsInColumn(Board board, int row, final int col) {
         int numPrecedingOKSqs = 0;
+        
         while (numPrecedingOKSqs < Frame.MAX_TILES && row > 0
                 && board.getSqContents(row - 1, col) == Board.EMPTY
                 && (row == 1 || board.getSqContents(row - 2, col) == Board.EMPTY)) {
@@ -307,6 +337,7 @@ public class BruteForce implements Bot {
      */
     private int countOtherOKSqsInColumn(Board board, int row, final int col) {
         int numOtherOKSqs = 0;
+        
         while (numOtherOKSqs < Frame.MAX_TILES && row < Board.SIZE) {
             if (board.getSqContents(row, col) == Board.EMPTY) {
                 numOtherOKSqs++;
@@ -338,7 +369,9 @@ public class BruteForce implements Bot {
         while (col < Board.SIZE && !isHorizontalHookSq(board, row, col)) {
             col++;
         }
-        if (col == Board.SIZE) return;
+        if (col == Board.SIZE) {
+            return;
+        }
 
         // Found a horizontal hook square
         numPrecedingOKSqs = countPrecedingHookOKSqsInRow(board, row, col);
@@ -347,7 +380,9 @@ public class BruteForce implements Bot {
         recordPositions(numPrecedingOKSqs, numHookOrOtherOKSqs, firstHookOrOKSq, row, Word.HORIZONTAL, true);
 
         // Search for possible positions which have a different first hook square
-        if (++col < Board.SIZE) genPossibleHooksInRow(board, row, col);
+        if (++col < Board.SIZE) {
+            genPossibleHooksInRow(board, row, col);
+        }
     }
 
     /**
@@ -367,6 +402,7 @@ public class BruteForce implements Bot {
      */
     private int countPrecedingHookOKSqsInRow(Board board, final int row, int col) {
         int numPrecedingOKSqs = 0;
+        
         while (numPrecedingOKSqs < Frame.MAX_TILES - 1 && col > 0
                 && board.getSqContents(row, col - 1) == Board.EMPTY
                 && (col == 1 || board.getSqContents(row, col - 2) == Board.EMPTY)
@@ -384,6 +420,7 @@ public class BruteForce implements Bot {
      */
     private int countHookOrOtherOKSqsInRow(Board board, final int row, int col) {
         int numHookOrOtherOKSqs = 0;
+        
         while (numHookOrOtherOKSqs < Frame.MAX_TILES && col < Board.SIZE
                 && board.getSqContents(row, col) == Board.EMPTY
                 && (col == Board.SIZE - 1 || board.getSqContents(row, col + 1) == Board.EMPTY)) {
@@ -410,15 +447,22 @@ public class BruteForce implements Bot {
 
     private void genPossibleHooksInColumn(Board board, int row, final int col) {
         int numPrecedingOKSqs, numHookOrOtherOKSqs, firstHookOrOKSq;
+        
         while (row < Board.SIZE && !isVerticalHookSq(board, row, col)) {
             row++;
         }
-        if (row == Board.SIZE) return;
+        if (row == Board.SIZE) {
+            return;
+        }
+        
         numPrecedingOKSqs = countPrecedingHookOKSqsInColumn(board, row, col);
         firstHookOrOKSq = row - numPrecedingOKSqs;
         numHookOrOtherOKSqs = countHookOrOtherOKSqsInColumn(board, row, col);
         recordPositions(numPrecedingOKSqs, numHookOrOtherOKSqs, firstHookOrOKSq, col, Word.VERTICAL, true);
-        if (++row < Board.SIZE) genPossibleHooksInColumn(board, row, col);
+        
+        if (++row < Board.SIZE) {
+            genPossibleHooksInColumn(board, row, col);
+        }
     }
 
     /**
@@ -438,6 +482,7 @@ public class BruteForce implements Bot {
      */
     private int countPrecedingHookOKSqsInColumn(Board board, int row, final int col) {
         int numPrecedingOKSqs = 0;
+        
         while (numPrecedingOKSqs < Frame.MAX_TILES - 1 && row > 0
                 && board.getSqContents(row - 1, col) == Board.EMPTY
                 && (row == 1 || board.getSqContents(row - 2, col) == Board.EMPTY)
@@ -455,6 +500,7 @@ public class BruteForce implements Bot {
      */
     private int countHookOrOtherOKSqsInColumn(Board board, int row, final int col) {
         int numHookOrOtherOKSqs = 0;
+        
         while (numHookOrOtherOKSqs < Frame.MAX_TILES && row < Board.SIZE
                 && board.getSqContents(row, col) == Board.EMPTY
                 && (row == Board.SIZE - 1 || board.getSqContents(row + 1, col) == Board.EMPTY)) {
@@ -481,6 +527,7 @@ public class BruteForce implements Bot {
         // frame would be used in a word placement at that position.
         Word bestWord = new Word(0, 0, Word.HORIZONTAL, "");
         int bestScore = 0;
+        
         for (int numTiles = numTilesInFrame; numTiles > 0; numTiles--) {
             for (Position position: possiblePositions.get(numTiles)) {
                 for (String anagram: anagrams.get(numTiles)) {
@@ -513,6 +560,7 @@ public class BruteForce implements Bot {
         int row = position.startRow;
         int col = position.startCol;
         int tilesUsed = 0;
+        
         while (tilesUsed < numTiles) {
             if (board.getSqContents(row, col) == Board.EMPTY) {
                 justAWord.append(anagram.charAt(tilesUsed));
@@ -532,6 +580,7 @@ public class BruteForce implements Bot {
     public List<String> assignLettersToBlankTiles(String anagram) {
         List<String> anagrams = new ArrayList<>();
         int blankTileFaceIndex = anagram.indexOf(Tile.BLANK);
+        
         if (blankTileFaceIndex == -1) { // There is no blank tile face in anagram
             anagrams.add(anagram);
         } else {
