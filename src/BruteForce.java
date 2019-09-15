@@ -77,13 +77,17 @@ public class BruteForce implements Bot {
             lettersInFrame.append(tile.getFace());
         }
         numTilesInFrame = lettersInFrame.length();
+        
         genAnagrams(lettersInFrame.toString());
+        
         if (board.isFirstPlay()) {
             genPossibleFirstPlay();
         } else {
             genPossible(board);
         }
+        
         word = findBestWord(numTilesInFrame, board, dictionary);
+        
         if (word.getLetters().length() > 0) { // Word placement found
             commandCode = UI.COMMAND_PLAY;
         } else {
