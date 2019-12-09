@@ -40,9 +40,9 @@ public class BruteForce implements Bot {
     }
 
     /**
-     * Returns a read-only list of possible positions of word placements using 'numTiles' tiles
-     * from the player's frame. These positions relate to the game state after the last call to
-     * getCommand().
+     * Returns a read-only list of possible positions of word placements using the specified number
+     * of tiles from the player's frame. These positions relate to the game state after the last
+     * call to getCommand().
      *
      * @param numTiles the number of tiles to use
      * @return list of positions
@@ -70,22 +70,27 @@ public class BruteForce implements Bot {
         // return the corresponding commandCode from UI
         // if a play, put the start position and letters into word
         // if an exchange, put the characters into letters
+
         StringBuilder lettersInFrame = new StringBuilder();
         int numTilesInFrame, commandCode;
 
+        // Get letters from the player's frame
         for (Tile tile: player.getFrame().getAllTiles()) {
             lettersInFrame.append(tile.getFace());
         }
         numTilesInFrame = lettersInFrame.length();
-        
+
+        // Generate anagrams of the letters
         genAnagrams(lettersInFrame.toString());
-        
+
+        // Generate possible positions of word placements
         if (board.isFirstPlay()) {
             genPossibleFirstPlay();
         } else {
             genPossible(board);
         }
-        
+
+        // Find the highest scoring word placement
         word = findBestWord(numTilesInFrame, board, dictionary);
         
         if (word.getLetters().length() > 0) { // Word placement found
@@ -202,8 +207,8 @@ public class BruteForce implements Bot {
         if (col == Board.SIZE) {
             return;
         }
-
         // Found a letter
+
         numPrecedingOKSqs = countPrecedingOKSqsInRow(board, row, col);
         firstLetterOrOKSq = col - numPrecedingOKSqs;
 
@@ -228,8 +233,8 @@ public class BruteForce implements Bot {
         int numPrecedingOKSqs = 0;
         
         while (numPrecedingOKSqs < Frame.MAX_TILES && col > 0
-                && board.getSqContents(row, col - 1) == Board.EMPTY
-                && (col == 1 || board.getSqContents(row, col - 2) == Board.EMPTY)) {
+               && board.getSqContents(row, col - 1) == Board.EMPTY
+               && (col == 1 || board.getSqContents(row, col - 2) == Board.EMPTY)) {
             numPrecedingOKSqs++;
             col--;
         }
@@ -255,16 +260,14 @@ public class BruteForce implements Bot {
     /**
      * Add positions encompassing the OK squares preceding and following a bunch of letters or a hook square.
      */
-    private void recordPositions(
-                int numPrecedingOKSqs,
-                int numOtherOKSqs,
-                int firstSq,
-                int rowOrCol,
-                int direction,
-                boolean hook) {
+    private void recordPositions(int numPrecedingOKSqs,
+                                 int numOtherOKSqs,
+                                 int firstSq,
+                                 int rowOrCol,
+                                 int direction,
+                                 boolean hook) {
         for (int numOthers = hook ? 1 : 0; numOthers <= numOtherOKSqs; numOthers++) {
-            for (int numPreceding = 1; numPreceding <= numPrecedingOKSqs && numPreceding + numOthers <= Frame.MAX_TILES;
-                 numPreceding++) {
+            for (int numPreceding = 1; numPreceding <= numPrecedingOKSqs && numPreceding + numOthers <= Frame.MAX_TILES; numPreceding++) {
                 possiblePositions.get(numPreceding + numOthers).add(new Position(
                     (direction == Word.HORIZONTAL) ? rowOrCol : firstSq + numPrecedingOKSqs - numPreceding,
                     (direction == Word.HORIZONTAL) ? firstSq + numPrecedingOKSqs - numPreceding : rowOrCol,
@@ -327,8 +330,8 @@ public class BruteForce implements Bot {
         int numPrecedingOKSqs = 0;
         
         while (numPrecedingOKSqs < Frame.MAX_TILES && row > 0
-                && board.getSqContents(row - 1, col) == Board.EMPTY
-                && (row == 1 || board.getSqContents(row - 2, col) == Board.EMPTY)) {
+               && board.getSqContents(row - 1, col) == Board.EMPTY
+               && (row == 1 || board.getSqContents(row - 2, col) == Board.EMPTY)) {
             numPrecedingOKSqs++;
             row--;
         }
@@ -376,8 +379,8 @@ public class BruteForce implements Bot {
         if (col == Board.SIZE) {
             return;
         }
-
         // Found a horizontal hook square
+
         numPrecedingOKSqs = countPrecedingHookOKSqsInRow(board, row, col);
         firstHookOrOKSq = col - numPrecedingOKSqs;
         numHookOrOtherOKSqs = countHookOrOtherOKSqsInRow(board, row, col);
@@ -408,10 +411,10 @@ public class BruteForce implements Bot {
         int numPrecedingOKSqs = 0;
         
         while (numPrecedingOKSqs < Frame.MAX_TILES - 1 && col > 0
-                && board.getSqContents(row, col - 1) == Board.EMPTY
-                && (col == 1 || board.getSqContents(row, col - 2) == Board.EMPTY)
-                && (row == 0 || board.getSqContents(row - 1, col - 1) == Board.EMPTY)
-                && (row + 1 == Board.SIZE || board.getSqContents(row + 1, col - 1) == Board.EMPTY)) {
+               && board.getSqContents(row, col - 1) == Board.EMPTY
+               && (col == 1 || board.getSqContents(row, col - 2) == Board.EMPTY)
+               && (row == 0 || board.getSqContents(row - 1, col - 1) == Board.EMPTY)
+               && (row + 1 == Board.SIZE || board.getSqContents(row + 1, col - 1) == Board.EMPTY)) {
             numPrecedingOKSqs++;
             col--;
         }
@@ -426,8 +429,8 @@ public class BruteForce implements Bot {
         int numHookOrOtherOKSqs = 0;
         
         while (numHookOrOtherOKSqs < Frame.MAX_TILES && col < Board.SIZE
-                && board.getSqContents(row, col) == Board.EMPTY
-                && (col == Board.SIZE - 1 || board.getSqContents(row, col + 1) == Board.EMPTY)) {
+               && board.getSqContents(row, col) == Board.EMPTY
+               && (col == Board.SIZE - 1 || board.getSqContents(row, col + 1) == Board.EMPTY)) {
             numHookOrOtherOKSqs++;
             col++;
         }
@@ -488,10 +491,10 @@ public class BruteForce implements Bot {
         int numPrecedingOKSqs = 0;
         
         while (numPrecedingOKSqs < Frame.MAX_TILES - 1 && row > 0
-                && board.getSqContents(row - 1, col) == Board.EMPTY
-                && (row == 1 || board.getSqContents(row - 2, col) == Board.EMPTY)
-                && (col == 0 || board.getSqContents(row - 1, col - 1) == Board.EMPTY)
-                && (col + 1 == Board.SIZE || board.getSqContents(row - 1, col + 1) == Board.EMPTY)) {
+               && board.getSqContents(row - 1, col) == Board.EMPTY
+               && (row == 1 || board.getSqContents(row - 2, col) == Board.EMPTY)
+               && (col == 0 || board.getSqContents(row - 1, col - 1) == Board.EMPTY)
+               && (col + 1 == Board.SIZE || board.getSqContents(row - 1, col + 1) == Board.EMPTY)) {
             numPrecedingOKSqs++;
             row--;
         }
@@ -506,8 +509,8 @@ public class BruteForce implements Bot {
         int numHookOrOtherOKSqs = 0;
         
         while (numHookOrOtherOKSqs < Frame.MAX_TILES && row < Board.SIZE
-                && board.getSqContents(row, col) == Board.EMPTY
-                && (row == Board.SIZE - 1 || board.getSqContents(row + 1, col) == Board.EMPTY)) {
+               && board.getSqContents(row, col) == Board.EMPTY
+               && (row == Board.SIZE - 1 || board.getSqContents(row + 1, col) == Board.EMPTY)) {
             numHookOrOtherOKSqs++;
             row++;
         }
@@ -537,7 +540,7 @@ public class BruteForce implements Bot {
                 for (String anagram: anagrams.get(numTiles)) {
                     for (String newAnagram: assignLettersToBlankTiles(anagram)) {
                         Word word = new Word(position.startRow, position.startCol, position.direction,
-                                mergeAnagramWithLettersOnBoard(newAnagram, board, numTiles, position));
+                                             mergeAnagramWithLettersOnBoard(newAnagram, board, numTiles, position));
                         int score = board.getTotalWordScore(word);
                         if (numTiles == Frame.MAX_TILES) {
                             score += Scrabble.BONUS;
