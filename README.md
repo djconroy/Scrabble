@@ -10,7 +10,7 @@ Note: BruteForce runs slowly when there's a blank tile in the player's frame sin
 ### Possible Word Placement Positions
 I designed an algorithm which generates all possible word placement positions for individual board states. For example, here's an illustration of a particular board state (made on [Scrabulizer](https://www.scrabulizer.com/)) and a list of the word placement positions my algorithm generates for it.
 
-<img src="exampleboardstate.PNG" />
+<p align="center"><img src="exampleboardstate.PNG" /></p>
 
 | No. of Letters | Horizontal | Vertical |
 | :---: | :---: | :---: |
